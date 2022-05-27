@@ -1,19 +1,31 @@
-# azure-terraform-nsg
+terraform {
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = ">=3.0.0"
+    }
+  }
+}
+provider "azurerm" {
+  features {}
+}
 
-## Create a simple Network Security Group (NSG) in Azure
+data "azurerm_client_config" "this" {}
 
-This Terraform module deploys a Network Security Group (NSG) in Azure.
+resource "azurerm_resource_group" "this" {
+  name     = "rg-example-vnet"
+  location = "westeurope"
+}
 
-The module creates or expose a security group.
-You could use https://github.com/n3tlix/azure-terraform-network to assign the network security group to the subnets.
+data "azurerm_resource_group" "this" {
+  name = azurerm_resource_group.this.name
+}
 
-## Usage in Terraform 0.13
-```hcl
 module "nsg" {
-  source              = "azure-terraform-nsg"
+  source              = "github.com/N3tLiX/modules//nsg"
   name                = "nsg-example"
-  resource_group_name = "rg-example-nsg"
-  location            = "westeurope"
+  resource_group_name = data.azurerm_virtual_network.this.resource_group_name
+  location            = data.azurerm_virtual_network.this.location
   associate_subnet_id = null
   rules = [
     {
@@ -62,22 +74,3 @@ module "nsg" {
     },
   ]
 }
-```
-
-### Configurations
-
-- [Configure Terraform for Azure](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/terraform-install-configure)
-
-### Native (Mac/Linux)
-
-#### Prerequisites
-
-- [Terraform **(~> 0.14.9")**](https://www.terraform.io/downloads.html)
-
-## Authors
-
-Originally created by [Patrick Hayo](http://github.com/adminph-de)
-
-## License
-
-[MIT](LICENSE)
