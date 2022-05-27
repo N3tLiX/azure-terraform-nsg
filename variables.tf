@@ -16,7 +16,7 @@ variable "location" {
 variable "associate_subnet_id" {
   description = "(Optional) The ID of the Subnet. Changing this forces a new resource to be created."
   type        = string
-  default     = null
+  default     = ""
 }
 
 variable "rules" {
