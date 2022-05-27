@@ -74,3 +74,8 @@ module "nsg" {
     },
   ]
 }
+
+output "nsg" {
+  description = "Network deployment output."
+  value       = module.nsg.this
+}
