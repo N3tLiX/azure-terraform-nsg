@@ -52,7 +52,6 @@ resource "azurerm_network_security_rule" "this" {
 }
 
 resource "azurerm_subnet_network_security_group_association" "this" {
-  count                     = var.associate_subnet_id != "" ? 1 : 0
   subnet_id                 = var.associate_subnet_id
   network_security_group_id = azurerm_network_security_group.this.id
 }
